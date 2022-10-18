@@ -4,7 +4,9 @@ const canvasWidth = canvas.width = 1000;    // canvas limits
 const canvasHeight = canvas.height = 700;
 let gameSpeed = 1                                                                                                                                                                       ; // background speed 
 let gameFrame = 0;
-const score = 0;
+let score = 0;
+gameOver = false;
+      
 
 
 const backgroundlayer1 = new Image(); // downloading backgrounds 
@@ -23,6 +25,10 @@ const backgroundlayer7 = new Image()
 backgroundlayer7.src = "./image/layer7.png";
 const backgroundlayer8 = new Image()
 backgroundlayer8.src = "./image/layer8.png";
+
+// end game image
+const crushgif = new Image();
+crushgif.src = './image/finish.jpg';
 
 
 class BackGround {       // making background class to be able to make many background images together with different speed and height to run together 
@@ -44,16 +50,6 @@ class BackGround {       // making background class to be able to make many back
             ctx.drawImage(this.image, this.x + this.width, this.y, this.width, this.height);
         }
 }
-function animate() {
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    arrBackGround.forEach(item => {
-        item.update()
-        item.draw()
-    })
-        gameFrame--
-        
-        requestAnimationFrame(animate);
-}
 
 const layer1 = new BackGround(backgroundlayer1, 1, 0, 700);
 const layer2 = new BackGround(backgroundlayer2, 0.5, 50, 70)
@@ -66,7 +62,7 @@ const layer8 = new BackGround(backgroundlayer8, 1, 650, 70)
 
 
 const arrBackGround = [layer1, layer2, layer3, layer4, layer5, layer6, layer7, layer8]  // array to cycle in for each loop instead of drawing one by one
-animate();
+
 
 /////////////////////////////////////////// end of background animation loop 
 
@@ -76,14 +72,14 @@ class Superman {                        // Superman Class
             x: 0,
             y: canvasHeight / 2 -90
         }
-        this.width = 230,
-        this.height = 120; 
+        this.width = 190,
+        this.height = 90; 
         const supermanImg = new Image();
         supermanImg.src = './image/superman.png';
 
         this.supermanImg = supermanImg;
         this.speed = 30;
-        this.rotation = 0;
+        
 
     }
     draw(){
@@ -111,74 +107,80 @@ class Superman {                        // Superman Class
     } 
 }
 const reaLsuperman = new Superman();
-function aliveSuperman(){
-    reaLsuperman.draw()
-    requestAnimationFrame(aliveSuperman) 
-    cd
-}
-                                 // End superman class 
+
+                               // End superman class 
 
                                 // Start Enemy class
-const numberOfEnemies = 5
-const enemyArray = []
 const enemyImage = new Image();
 enemyImage.src = './image/enemy2.png';
 let enemyGameFrame = 0;
 
+///// start
+class Game {
+    constructor(ctx, width, height){
+        this.ctx = ctx;
+        this.width = width;
+        this.height = height;
+        this.enemies = [];
+        this.enemyInterval = 400;
+        this.enemyTimer = 0;
+        
+    }
+    update(){
+
+        if (this.enemyTimer > this.enemyInterval){
+            this.#addNewEnemy();
+            this.enemyTimer = 0;
+        } 
+            else {
+                this.enemyTimer++
+            }
+
+        this.enemies.forEach(object => object.update());
+    }
+    draw(){
+        this.enemies.forEach(object => object.draw());
+    }
+    #addNewEnemy() {
+        this.enemies.push(new Enemy(this));
+    }
+}
 
 class Enemy {
-    constructor() {
-        this.speed = 1
+    constructor(game) {
+        this.game = game;
+        this.speed = 1;
         this.spriteWidth = 266,
         this.spriteHeight = 188,
-        this.width = this.spriteWidth / 2.5,
-        this.height = this.spriteHeight / 2.5,
-        this.y = Math.random() * canvasHeight,
-        this.x = 700;
+        this.width = this.spriteWidth / 3,
+        this.height = this.spriteHeight / 3,
+        this.y = Math.random() * (canvasHeight - this.height),
+        this.x = canvasWidth;
         this.frame = 0;
         this.flapSpeed = Math.floor(Math.random() * 3 + 1);
+        
     }
     update(){
         this.x -= this.speed 
-        if (this.x + this.width < 0) this.x = canvasWidth
+        if (this.x + this.width < 0) this.x = canvasWidth;
+       
         if (enemyGameFrame % this.flapSpeed === 0){
             this.frame > 4 ? this.frame = 0 : this.frame++;
         }
+
+        game.enemies.forEach(enemy => {
+            if (reaLsuperman.contains(enemy)){
+                gameOver = true;
+             }
+            })
     }
-    draw() {
+    draw() { //
+       
         ctx.drawImage(enemyImage, this.frame * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
     }
+                                              //end of enemy creation
 }
-
-for (let i = 0; i < numberOfEnemies; ++i) {
-enemyArray.push(new Enemy())   
-}
-
-function aliveEnemy (){            //function to enimate the enemy
-    enemyArray.forEach(enemy => {
-            enemy.update()
-            enemy.draw()
-            
-        })  
-        enemyGameFrame++  
-        checkForCollision()
-        requestAnimationFrame(aliveEnemy) 
-}
-                                                //end of enemy creation
-function updateGame(){
-    aliveEnemy()
-    aliveSuperman()
     
-}
-updateGame(); 
-
-function checkForCollision(){
-    enemyArray.forEach((enemy) =>{
-        console.log(reaLsuperman.contains(enemy))
-    })       
-        
-}
-
 addEventListener('keydown', ({key}) => {
     switch (key) {
         case'w':
@@ -189,33 +191,75 @@ addEventListener('keydown', ({key}) => {
             break; 
     }  
 })
-/*
-           if (reaLsuperman.contains(enemy)){
-                loseScreen();
-                youLost();
-                endscore();
-            }   
 
 
-const loseScreen = () => {
-    const crushgif = new Image();
-    crushgif.src = './image/finishpicture.jpg';
-    ctx.drawImage(crushgif, 0, 0, 1000, 700)
+
+
+const game = new Game();
+let lastTime = 1;
+
+
+   function gameState() {
+    if (gameOver){
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        loseScreen();
+        youLost();
+        endscore();
+    }
+   }
+
+function playStatus() {
+ctx.fillStyle = "black"
+ctx.font = "30px Arial"
+
+if (!gameOver){
+    ctx.fillText(`Score:${score}`, 100,100) 
+}
+}
+
+setInterval(() => {
+    score++;
+  }, "1000")
+
+function animate(timeStamp) {
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    arrBackGround.forEach(item => {
+        item.update()
+        item.draw()
+    })
+        gameFrame--
+        const deltaTime = timeStamp - lastTime;
+        lastTime = timeStamp;
+        game.update(deltaTime);
+        game.draw();
+        reaLsuperman.draw();
+        gameState();
+        playStatus();
+
+       if (!gameOver) requestAnimationFrame(animate);
+
     
+            
+}
+animate();
+
+
+// const drawScore = () => {
+//     ctx.fillStyle = "black"
+//     ctx.font = "30px Arial"
+//     ctx.fillText(`Score:${score}`, 100,100)
+// } 
+const loseScreen = () => {
+    ctx.drawImage(crushgif, 0, 0, 1000, 700)
 }
 const youLost = () => {
     ctx.fillStyle = "red";
     ctx.font = "70px arial"; 
-    ctx.fillText("Game Over!", 400, 420)
-    ctx.fillText("You Lost...", 400, 420)
+    ctx.fillText("Game Over!", 400, 400)
+    ctx.fillText("You Lost...", 400, 500)
 }
 const endscore = () => {
     ctx.fillStyle = "white"
     ctx.font = "50px arial"
     ctx.fillText(`your score is: ${score}`, 400, 600) 
 }
-const drawScore = () => {
-    ctx.fillStyle = "black"
-    ctx.font = "30px Arial"
-    ctx.fillText(`Score:${score}`, 100,100)
-} */
