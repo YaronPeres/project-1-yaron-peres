@@ -6,7 +6,16 @@ let gameSpeed = 1                                                               
 let gameFrame = 0;
 let score = 0;
 gameOver = false;
-      
+
+
+const startButton = document.querySelector('.bouncy');
+const  startPage = document.querySelector('.start-page');      
+startButton.addEventListener('click', () => {
+    animate()
+    canvas.classList.remove('hidden')
+    startButton.classList.add('hidden')
+    score = 0
+})
 
 
 const backgroundlayer1 = new Image(); // downloading backgrounds 
@@ -122,7 +131,7 @@ class Game {
         this.width = width;
         this.height = height;
         this.enemies = [];
-        this.enemyInterval = 400;
+        this.enemyInterval = 300;
         this.enemyTimer = 0;
         
     }
@@ -241,7 +250,7 @@ function animate(timeStamp) {
     
             
 }
-animate();
+
 
 
 // const drawScore = () => {
