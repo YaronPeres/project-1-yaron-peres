@@ -43,36 +43,52 @@ body {
     50%{top:0em}
     100%{top:0em;}
 }
-h1>span{
-    /*color:white;*/
-    top:35%;
+.gold{
     position: absolute;
-    transition: translateY(-50%);
-    margin: 0;
-    padding: 0;
-    width:100%;
-    text-align: center;
-    font-family: sans-serif;
-    font-style: italic;
-    font-size:4em;
-    text-transform: uppercase;
-    letter-spacing: 5px;
-    background:linear-gradient(#262626,#eaeaea,#262626);
-    -webkit-background-clip: text;
+    transform: translate(-50%,-50%);
+    top: 50px;
+    left: 380px;
+    font-family: 'Times New Roman',serif;
+    letter-spacing: 2px;
+    font-size: 50px;
+    font-weight: bold;
     color:transparent;
-  }
-  h1>span:nth-child(1)
-  {
-    z-index: 2;
-  }
-  h1>span:nth-child(2)
-  {
-    z-index: 1;
-    text-shadow: 1px 1px 0 #262626, 2px 2px 0 #262626, 3px 3px 0 #262626,
-    4px 4px 0 #262626, 5px 5px 0 #262626, 1px 1px 0 #262626, 6px 20px 20px rgba(0,0,0,1),
-    -1px -1px 0 #fff;
-  }
-
+    background-image: linear-gradient(
+     to right,
+     #ff0000 0,
+            #041dff 22%, 
+     #334ff0 45%,
+     #2060e9 50%,
+     #263bf5 55%,
+     #f61e1e 78%,
+     #1c4ef4 100%
+     );
+    -webkit-background-clip:text;
+ 
+ }
+.gold2{
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 280px;
+    left: 260px;
+    font-family: 'Times New Roman',serif;
+    letter-spacing: 3px;
+    font-size: 35px;
+    font-weight: bold;
+    color:transparent;
+    background-image: linear-gradient(
+     to right,
+     #001aff 0,
+            #041dff 22%, 
+     #334ff0 45%,
+     #2060e9 50%,
+     #263bf5 55%,
+     #581ef6 78%,
+     #1c47f4 100%
+     );
+    -webkit-background-clip:text;
+  
+}
 #canvas {
     position: absolute;
     border: 3px solid rgb(21, 171, 194); 

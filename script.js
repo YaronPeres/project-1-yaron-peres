@@ -81,8 +81,8 @@ class Superman {                        // Superman Class
             x: 0,
             y: canvasHeight / 2 -90
         }
-        this.width = 190,
-        this.height = 90; 
+        this.width = 170,
+        this.height = 80; 
         const supermanImg = new Image();
         supermanImg.src = './image/superman.png';
 
@@ -107,6 +107,18 @@ class Superman {                        // Superman Class
             return
         }
         this.position.y += this.speed  
+    }
+    moveRight(){
+        if (this.position.x < 0) {
+            return
+        }
+        this.position.x += this.speed
+    }
+    moveLeft(){
+        if(this.position.x > canvasHeight - (this.height + 20)){
+            return
+        }
+        this.position.x -= this.speed  
     }
     contains(b) {
         return (this.position.x < b.x + b.width) &&
@@ -194,10 +206,17 @@ addEventListener('keydown', ({key}) => {
     switch (key) {
         case'w':
             reaLsuperman.moveUp()    
-        break;   
-        case's':
+            break;   
+            case's':
             reaLsuperman.moveDown()
             break; 
+            case'd':
+            reaLsuperman.moveRight()    
+            break;   
+            case'a':
+            reaLsuperman.moveLeft()
+            break; 
+            
     }  
 })
 
@@ -220,7 +239,6 @@ let lastTime = 1;
 function playStatus() {
 ctx.fillStyle = "black"
 ctx.font = "30px Arial"
-
 if (!gameOver){
     ctx.fillText(`Score:${score}`, 100,100) 
 }
@@ -252,12 +270,6 @@ function animate(timeStamp) {
 }
 
 
-
-// const drawScore = () => {
-//     ctx.fillStyle = "black"
-//     ctx.font = "30px Arial"
-//     ctx.fillText(`Score:${score}`, 100,100)
-// } 
 const loseScreen = () => {
     ctx.drawImage(crushgif, 0, 0, 1000, 700)
 }
