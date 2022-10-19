@@ -85,58 +85,88 @@ class Superman {                        // Superman Class
         this.height = 80; 
         const supermanImg = new Image();
         supermanImg.src = './image/superman.png';
-
         this.supermanImg = supermanImg;
-        this.speed = 30;
-        
+        this.speed = 40;
 
     }
     draw(){
-        ctx.drawImage(this.supermanImg, this.position.x, this.position.y, this.width, this.height)
-
-      
+        ctx.drawImage(this.supermanImg, this.position.x, this.position.y, this.width, this.height)      
     }
     moveUp(){
-        if (this.position.y < 0) {
+        if (this.position.y < 10) {
             return
         }
         this.position.y -= this.speed
     }
     moveDown(){
-        if(this.position.y > canvasHeight - (this.height + 20)){
+        if(this.position.y > canvasHeight - (this.height)){
             return
         }
         this.position.y += this.speed  
     }
     moveRight(){
-        if (this.position.x < 0) {
+        if (this.position.x > 820) {
             return
         }
         this.position.x += this.speed
     }
     moveLeft(){
-        if(this.position.x > canvasHeight - (this.height + 20)){
+        if(this.position.x < 0){
             return
         }
         this.position.x -= this.speed  
     }
     contains(b) {
-        return (this.position.x < b.x + b.width) &&
-        (this.position.x + this.width > b.x) &&
-        (this.position.y < b.y + b.height) &&
-        (this.position.y + this.height > b.y)
+        return (this.position.x < b.x + (b.width-15)) &&
+        (this.position.x + (this.width - 25) > b.x) &&
+        (this.position.y < b.y + (b.height - 30)) &&
+        (this.position.y + (this.height - 25) > b.y)
     } 
 }
 const reaLsuperman = new Superman();
+                                                            // End superman class 
 
-                               // End superman class 
 
-                                // Start Enemy class
+
+
+                                                            //start projectiles
+const projectileImg = new Image();
+projectileImg.src = './image/lazer1.png'                              
+class Projectiles {
+    constructor({position, speed}){
+        this.position = position
+        this.height = 200;
+        this.width = 500;
+        this.speed = speed;
+        this.image = projectileImg;
+
+    }
+    draw(){
+        ctx.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)
+    }
+    update(){ 
+        this.draw();
+        this.position.x += this.speed.x   // this speed is needed??? 
+     
+    }
+    contains(b) {
+        return (this.position.x < b.x + (b.width-15)) &&
+        (this.position.x + (this.width - 25) > b.x) &&
+        (this.position.y < b.y + (b.height - 30)) &&
+        (this.position.y + (this.height - 25) > b.y)
+    } 
+
+}
+const projectilesArray = [];
+                                                    // finish projectiles
+
+
+
+                                                     // Start Enemy class
 const enemyImage = new Image();
 enemyImage.src = './image/enemy2.png';
 let enemyGameFrame = 0;
 
-///// start
 class Game {
     constructor(ctx, width, height){
         this.ctx = ctx;
@@ -170,7 +200,7 @@ class Game {
 class Enemy {
     constructor(game) {
         this.game = game;
-        this.speed = 1;
+        this.speed = 2;
         this.spriteWidth = 266,
         this.spriteHeight = 188,
         this.width = this.spriteWidth / 3,
@@ -188,7 +218,7 @@ class Enemy {
         if (enemyGameFrame % this.flapSpeed === 0){
             this.frame > 4 ? this.frame = 0 : this.frame++;
         }
-
+       
         game.enemies.forEach(enemy => {
             if (reaLsuperman.contains(enemy)){
                 gameOver = true;
@@ -199,8 +229,8 @@ class Enemy {
        
         ctx.drawImage(enemyImage, this.frame * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
     }
-                                              //end of enemy creation
-}
+                                                           //end of enemy creation
+}                                                           //game functions
     
 addEventListener('keydown', ({key}) => {
     switch (key) {
@@ -216,7 +246,17 @@ addEventListener('keydown', ({key}) => {
             case'a':
             reaLsuperman.moveLeft()
             break; 
-            
+            case' ':
+            projectilesArray.push(new Projectiles({
+                position: {
+                    x: reaLsuperman.position.x + 130,
+                    y: reaLsuperman.position.y -60
+                },
+               speed: {
+                    x: 10,
+                    y: 0
+                }
+            }))
     }  
 })
 
@@ -244,7 +284,7 @@ if (!gameOver){
 }
 }
 
-setInterval(() => {
+setInterval(() => {        // fix to start after few seconds
     score++;
   }, "1000")
 
@@ -262,7 +302,19 @@ function animate(timeStamp) {
         reaLsuperman.draw();
         gameState();
         playStatus();
-
+        projectilesArray.forEach((projectile, index) => {
+            if (projectile.position.x + projectile.width <= 0) {
+                Projectiles.splice(index, 1);
+            } 
+                else {
+                    game.enemies.forEach((enemy, index) => {
+                    if (projectile.contains(enemy)){
+                        game.enemies.splice(index)
+                    }
+                    })
+                    projectile.update();
+                }
+        });
        if (!gameOver) requestAnimationFrame(animate);
 
     
