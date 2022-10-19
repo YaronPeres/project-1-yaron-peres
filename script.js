@@ -136,7 +136,7 @@ class Projectiles {
     constructor({position, speed}){
         this.position = position
         this.height = 200;
-        this.width = 500;
+        this.width = 700;
         this.speed = speed;
         this.image = projectileImg;
 
@@ -150,10 +150,10 @@ class Projectiles {
      
     }
     contains(b) {
-        return (this.position.x < b.x + (b.width-15)) &&
-        (this.position.x + (this.width - 25) > b.x) &&
-        (this.position.y < b.y + (b.height - 30)) &&
-        (this.position.y + (this.height - 25) > b.y)
+        return (this.position.x < b.x + (b.width-25)) &&
+        (this.position.x + (this.width - 260) > b.x) &&
+        (this.position.y < b.y + (b.height - 100)) &&
+        (this.position.y + (this.height - 100) > b.y)
     } 
 
 }
@@ -173,7 +173,7 @@ class Game {
         this.width = width;
         this.height = height;
         this.enemies = [];
-        this.enemyInterval = 300;
+        this.enemyInterval = 100;
         this.enemyTimer = 0;
         
     }
@@ -253,7 +253,7 @@ addEventListener('keydown', ({key}) => {
                     y: reaLsuperman.position.y -60
                 },
                speed: {
-                    x: 10,
+                    x: 80,
                     y: 0
                 }
             }))
@@ -304,12 +304,12 @@ function animate(timeStamp) {
         playStatus();
         projectilesArray.forEach((projectile, index) => {
             if (projectile.position.x + projectile.width <= 0) {
-                Projectiles.splice(index, 1);
+                Projectiles.splice(index);
             } 
                 else {
                     game.enemies.forEach((enemy, index) => {
                     if (projectile.contains(enemy)){
-                        game.enemies.splice(index)
+                        game.enemies.splice(index, 1)
                     }
                     })
                     projectile.update();
