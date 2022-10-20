@@ -8,6 +8,8 @@ let score = 0;
 gameOver = false;
 
 
+
+
 const startButton = document.querySelector('.bouncy');
 const  startPage = document.querySelector('.start-page');      
 startButton.addEventListener('click', () => {
@@ -16,6 +18,7 @@ startButton.addEventListener('click', () => {
     startButton.classList.add('hidden')
     score = 0
     kryiptoniteCon = []
+    redkryiptoniteCon = []
 
 })
 
@@ -88,20 +91,23 @@ class Superman {                        // Superman Class
         const supermanImg = new Image();
         supermanImg.src = './image/superman.png';
         this.supermanImg = supermanImg;
-        this.speed = 50;
+        this.speed = 40;
 
     }
     draw(){
         ctx.drawImage(this.supermanImg, this.position.x, this.position.y, this.width, this.height)      
     }
+
+
+
     moveUp(){
-        if (this.position.y < 10) {
+        if (this.position.y < 11) {
             return
         }
         this.position.y -= this.speed
     }
     moveDown(){
-        if(this.position.y > canvasHeight - (this.height + 10)){
+        if(this.position.y > canvasHeight - (this.height + 15)){
             return
         }
         this.position.y += this.speed  
@@ -138,7 +144,7 @@ class Projectiles {
     constructor({position, speed}){
         this.position = position
         this.height = 200;
-        this.width = 700;
+        this.width = 500;
         this.speed = speed;
         this.image = projectileImg;
 
@@ -202,7 +208,7 @@ class Game {
 class Enemy {
     constructor(game) {
         this.game = game;
-        this.speed = 2;
+        this.speed = 1;
         this.spriteWidth = 266,
         this.spriteHeight = 188,
         this.width = this.spriteWidth / 3,
@@ -211,6 +217,8 @@ class Enemy {
         this.x = canvasWidth;
         this.frame = 0;
         this.flapSpeed = Math.floor(Math.random() * 3 + 1);
+        this.angle = 0
+        this.curve = Math.random() * 3
         
     }
     update(){
@@ -220,6 +228,8 @@ class Enemy {
         if (enemyGameFrame % this.flapSpeed === 0){
             this.frame > 4 ? this.frame = 0 : this.frame++;
         }
+        this.y += Math.sin(this.angle) * this.curve   // radius value 
+        this.angle += 0.1; //angle value
        
         game.enemies.forEach(enemy => {
             if (reaLsuperman.contains(enemy)){
@@ -233,22 +243,56 @@ class Enemy {
     }
                                                      
   
-}             
-                                                    //kryptonite      
+}                                        
 
+                                                          //end of enemy creation
+                                                            //kryptonite          
 const green = new Image();
 green.src = './image/green.png';
-
-
 class Kryptonitecls  {
     constructor() {
-        this.width = 80;
-        this.x = (Math.random() * (canvas.width - 200)) +25;
-        this.y = 0,
-        this.height = 70,
-        this.color = "green",
-        this.speedY = 0.2
+        this.width = 100;
+        this.x = 1000,
+        this.y = (Math.random() * (canvas.height) - 80) ;                 // todo: this
+        this.height = 90,
+        this.speed = 1,
         this.image = green;
+    }
+    draw() {
+        if(this.x > canvas.width){    // if(this.y > canvas.height / 2) controls the length it will go
+            return
+        }
+        ctx.drawImage(this.image, this.x, this.y, this.width, this.height)
+        this.handleMove()
+    }                         
+    handleMove() {
+        this.x-= this.speed
+    } 
+    contains(b) {
+        return (this.x < b.position.x + b.width) &&
+        (this.x + this.width > b.position.x) &&
+        (this.y < b.position.y + b.height) &&
+        (this.y + this.height > b.position.y)
+    } 
+}
+let kryiptoniteCon = []
+
+setInterval(() => {
+    const kriptonite =  new Kryptonitecls 
+    kryiptoniteCon.push(kriptonite)
+}, 4000)
+
+
+const red = new Image();
+red.src = './image/red.png';
+class Redkryptonitecls  {
+    constructor() {
+        this.width = 60;
+        this.x = (Math.random() * (canvas.width - 200)) +25;
+        this.y =  0;                 // todo: this
+        this.height = 60,
+        this.speed = 1,
+        this.image = red;
     }
     draw() {
         if(this.y > canvas.height){    // if(this.y > canvas.height / 2) controls the length it will go
@@ -267,18 +311,16 @@ class Kryptonitecls  {
         (this.y + this.height > b.position.y)
     } 
 }
-let kryiptoniteCon = []
+let redkryiptoniteCon = []
 
 setInterval(() => {
-    const kriptonite =  new Kryptonitecls 
-    kryiptoniteCon.push(kriptonite)
-}, 10000)
+    const redkriptonite =  new Redkryptonitecls 
+    redkryiptoniteCon.push(redkriptonite)
+}, 30000)
 
 
 
-
-
-                                                    //end of enemy creation
+                                                
                                                     //game functions
     
 addEventListener('keydown', ({key}) => {
@@ -302,7 +344,7 @@ addEventListener('keydown', ({key}) => {
                     y: reaLsuperman.position.y -60
                 },
                speed: {
-                    x: 80,
+                    x: 100,
                     y: 0
                 }
             }))
@@ -324,7 +366,7 @@ let lastTime = 1;
         endscore();
         projectilesArray = [];
         kryiptoniteCon= [];
-
+        redkryiptoniteCon = [];
     }
    }
 
@@ -336,9 +378,7 @@ if (!gameOver){
 }
 }
 
-//setInterval(() => {        // fix to start after few seconds
-  //  score++;
-  //}, "1000")
+
 
 function animate(timeStamp) {
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -368,15 +408,25 @@ function animate(timeStamp) {
                     projectile.update();
                 }
         });
-        for (let i =  0; i < kryiptoniteCon.length; i++) {
+        for (let i =  0; i < kryiptoniteCon.length; i++) { //green
             kryiptoniteCon[i].draw();
         }
         kryiptoniteCon.forEach((kryp, index) => {
             if(reaLsuperman.contains(kryp, index)){
-                reaLsuperman.speed -= 30
+                reaLsuperman.speed -= 10       // if speed under 10?
                 kryiptoniteCon.splice(index, 1)
             }
         })
+        for (let i =  0; i < redkryiptoniteCon.length; i++) { //red
+            redkryiptoniteCon[i].draw();
+        }
+        redkryiptoniteCon.forEach((kryp, index) => {
+            if(reaLsuperman.contains(kryp, index)){
+                reaLsuperman.speed += 10       // if speed under 10?
+                redkryiptoniteCon.splice(index, 1)
+            }
+        })
+
 
        if (!gameOver) requestAnimationFrame(animate);
 
