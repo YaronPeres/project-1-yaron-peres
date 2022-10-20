@@ -15,6 +15,8 @@ startButton.addEventListener('click', () => {
     canvas.classList.remove('hidden')
     startButton.classList.add('hidden')
     score = 0
+    kryiptoniteCon = []
+
 })
 
 
@@ -86,7 +88,7 @@ class Superman {                        // Superman Class
         const supermanImg = new Image();
         supermanImg.src = './image/superman.png';
         this.supermanImg = supermanImg;
-        this.speed = 40;
+        this.speed = 50;
 
     }
     draw(){
@@ -99,7 +101,7 @@ class Superman {                        // Superman Class
         this.position.y -= this.speed
     }
     moveDown(){
-        if(this.position.y > canvasHeight - (this.height)){
+        if(this.position.y > canvasHeight - (this.height + 10)){
             return
         }
         this.position.y += this.speed  
@@ -111,7 +113,7 @@ class Superman {                        // Superman Class
         this.position.x += this.speed
     }
     moveLeft(){
-        if(this.position.x < 0){
+        if(this.position.x < 5){
             return
         }
         this.position.x -= this.speed  
@@ -157,7 +159,7 @@ class Projectiles {
     } 
 
 }
-const projectilesArray = [];
+let projectilesArray = [];
                                                     // finish projectiles
 
 
@@ -229,8 +231,55 @@ class Enemy {
        
         ctx.drawImage(enemyImage, this.frame * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
     }
-                                                           //end of enemy creation
-}                                                           //game functions
+                                                     
+  
+}             
+                                                    //kryptonite      
+
+const green = new Image();
+green.src = './image/green.png';
+
+
+class Kryptonitecls  {
+    constructor() {
+        this.width = 80;
+        this.x = (Math.random() * (canvas.width - 200)) +25;
+        this.y = 0,
+        this.height = 70,
+        this.color = "green",
+        this.speedY = 0.2
+        this.image = green;
+    }
+    draw() {
+        if(this.y > canvas.height){    // if(this.y > canvas.height / 2) controls the length it will go
+            return
+        }
+        ctx.drawImage(this.image, this.x, this.y, this.width, this.height)
+        this.handleMove()
+    }                         
+    handleMove() {
+        this.y++
+    } 
+    contains(b) {
+        return (this.x < b.position.x + b.width) &&
+        (this.x + this.width > b.position.x) &&
+        (this.y < b.position.y + b.height) &&
+        (this.y + this.height > b.position.y)
+    } 
+}
+let kryiptoniteCon = []
+
+setInterval(() => {
+    const kriptonite =  new Kryptonitecls 
+    kryiptoniteCon.push(kriptonite)
+}, 10000)
+
+
+
+
+
+                                                    //end of enemy creation
+                                                    //game functions
     
 addEventListener('keydown', ({key}) => {
     switch (key) {
@@ -273,6 +322,9 @@ let lastTime = 1;
         loseScreen();
         youLost();
         endscore();
+        projectilesArray = [];
+        kryiptoniteCon= [];
+
     }
    }
 
@@ -284,9 +336,9 @@ if (!gameOver){
 }
 }
 
-setInterval(() => {        // fix to start after few seconds
-    score++;
-  }, "1000")
+//setInterval(() => {        // fix to start after few seconds
+  //  score++;
+  //}, "1000")
 
 function animate(timeStamp) {
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -309,12 +361,23 @@ function animate(timeStamp) {
                 else {
                     game.enemies.forEach((enemy, index) => {
                     if (projectile.contains(enemy)){
+                        score++
                         game.enemies.splice(index, 1)
                     }
                     })
                     projectile.update();
                 }
         });
+        for (let i =  0; i < kryiptoniteCon.length; i++) {
+            kryiptoniteCon[i].draw();
+        }
+        kryiptoniteCon.forEach((kryp, index) => {
+            if(reaLsuperman.contains(kryp, index)){
+                reaLsuperman.speed -= 30
+                kryiptoniteCon.splice(index, 1)
+            }
+        })
+
        if (!gameOver) requestAnimationFrame(animate);
 
     

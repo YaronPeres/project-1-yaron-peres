@@ -20,7 +20,7 @@ body {
 }
 .bouncy:hover {background-color: #ffdd00}
 .bouncy{
-    animation:bouncy 4s infinite linear;
+    animation:bouncy 1s infinite linear;
     position:relative;
     background-color: rgba(243, 192, 9, 0.87);
     border-color:rgb(10, 71, 150);
@@ -35,19 +35,19 @@ body {
     
 }
     @keyframes bouncy {  /* start */ 
-    20%{top:0em}
+    80%{top:0em}
     40%{top:0em}
     43%{top:-0.9em}
     46%{top:0em}
-    48%{top:-0.4em}
+    48%{top:-1em}
     50%{top:0em}
-    100%{top:0em;}
+    20%{top:-0.9em;}
 }
 .gold{
     position: absolute;
     transform: translate(-50%,-50%);
     top: 50px;
-    left: 380px;
+    left: 350px;
     font-family: 'Times New Roman',serif;
     letter-spacing: 2px;
     font-size: 50px;
@@ -56,7 +56,7 @@ body {
     background-image: linear-gradient(
      to right,
      #ff0000 0,
-            #041dff 22%, 
+    #041dff 22%, 
      #334ff0 45%,
      #2060e9 50%,
      #263bf5 55%,
@@ -69,34 +69,26 @@ body {
 .gold2{
     position: absolute;
     transform: translate(-50%,-50%);
-    top: 280px;
+    top: 250px;
     left: 220px;
-    font-family: 'Times New Roman',serif;
     letter-spacing: 3px;
     font-size: 35px;
     font-weight: bold;
-    color:transparent;
-    background-image: linear-gradient(
-     to right,
-     #001aff 0,
-            #041dff 22%, 
-     #334ff0 45%,
-     #2060e9 50%,
-     #263bf5 55%,
-     #581ef6 78%,
-     #1c47f4 100%
-     );
-    -webkit-background-clip:text;
+    position: absolute;
+    color: rgb(59, 88, 250);
+    font-family: 'Verdada',sans-serif;
+    -webkit-text-stroke: 1px rgb(0, 0, 0);
+
   
 }
 .wbutton{
     position: absolute;
-    top: 475px;
-    left: 27px;
+    top: 410px;
+    left: 120px;
 }   
 
 .wasd{
-    animation:bouncy 5s infinite linear;
+    animation:bouncy 3s infinite linear;
     position:relative;
     }
     @keyframes bouncy {
@@ -110,15 +102,65 @@ body {
     }
 .allbutton{
     position: absolute;
-    top: 500px;
-    left: 200px;
+    top: 445px;
+    left: 84px;
+    
 }
 .button1{
-    position: absolute;
-    top: 450px;
-    left: 200px;
+    border-width: 2px;
+    font-weight:bolder;
+    padding: 5px 10px;
+    font-size: 14px;
 }
-
+.button2{
+    border-width: 2px;
+    font-weight:bolder;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+.button3{
+    border-width: 2px;
+    font-weight:bolder;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+.button4{
+    border-width: 2px;
+    font-weight:bolder;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+.button5{
+    border-width: 2px;
+    font-weight:bolder; 
+    padding: 2px 5px;
+    font-size: 14px;
+}
+.spacemaster{
+    position: absolute;
+    top: 585px;
+    left: 145px; 
+}
+.itswhat{
+    position: absolute;
+    top: 465px;
+    left: 45px;  
+    color: red;
+    font-family: 'Verdada',sans-serif;
+    font-size: larger;
+    font-weight: bold;
+    -webkit-text-stroke: 0.5px rgb(255, 255, 255);
+}
+.powers{
+    position: absolute;
+    top: 500px;
+    left: 45px;  
+    color: red;
+    font-family: 'Verdada',sans-serif;
+    font-size: larger;
+    font-weight: bold;
+    -webkit-text-stroke: 0.5px rgb(255, 255, 255);
+}
 
 
 #canvas {
