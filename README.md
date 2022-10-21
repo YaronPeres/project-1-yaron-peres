@@ -17,6 +17,10 @@ red kryptonite will arrive. make sure to catch it on time.
 - Player can increase his SPEED by colliding the red kryptonite.
 - Player will decrease his SPEED by colliding the green kryptonite.
 - Player will increase his SCORE by eliminating the flying enemies.
+---
+### More to come
+- [ ] Sound
+- [ ] Superman Sprite
 
 
 
