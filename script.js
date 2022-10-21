@@ -8,6 +8,8 @@ let score = 0;
 gameOver = false;
 
 
+
+
 const theme = new sound("./image/sound/theme.mp3")
 const laser = new sound("./image/sound/laser1.mp3")
 const wind = new sound("./image/sound/wind.mp3")
@@ -238,16 +240,16 @@ function speedScore(){
         game.enemyInterval = 100
         console.log("score is bigger then 10")
     }
-    else if(score > 20 && score < 30){
+    else if(score > 20 && score < 40){
         game.enemyInterval = 50
         console.log("score is bigger then 20")
     }
-    else if(score > 30 && score < 40){
+    else if(score > 300 && score < 1000){
         game.enemyInterval = 20
        
     
     }
-    else if(score > 40){
+    else if(score > 1000){
         game.enemyInterval = 1
     }
 }
