@@ -8,7 +8,31 @@ let score = 0;
 gameOver = false;
 
 
+const theme = new sound("./image/sound/theme.mp3")
+const laser = new sound("./image/sound/laser1.mp3")
+const wind = new sound("./image/sound/wind.mp3")
+const firstbreak1 = new sound("./image/sound/firstbreak2.mp3")
+const doyoubleed = new sound("./image/sound/doyoubleed.mp3")
+const greensound = new sound("./image/sound/greensound.mp3")
 
+function sound (src){
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function(){
+    this.sound.play();
+    };
+    this.stop = function(){
+    this.sound.pause();
+    };
+    }
+
+    window.onload = () => {
+       theme.play();
+      } 
 
 const startButton = document.querySelector('.bouncy');
 const  startPage = document.querySelector('.start-page');      
@@ -19,6 +43,10 @@ startButton.addEventListener('click', () => {
     score = 0
     kryiptoniteCon = []
     redkryiptoniteCon = []
+    theme.stop()
+    firstbreak1.play();
+    
+   
 
 })
 
@@ -107,7 +135,7 @@ class Superman {                        // Superman Class
         this.position.y -= this.speed
     }
     moveDown(){
-        if(this.position.y > canvasHeight - (this.height + 15)){
+        if(this.position.y > 600){
             return
         }
         this.position.y += this.speed  
@@ -181,10 +209,11 @@ class Game {
         this.width = width;
         this.height = height;
         this.enemies = [];
-        this.enemyInterval = 100;
+        this.enemyInterval = 200;
         this.enemyTimer = 0;
         
     }
+    
     update(){
 
         if (this.enemyTimer > this.enemyInterval){
@@ -204,6 +233,24 @@ class Game {
         this.enemies.push(new Enemy(this));
     }
 }
+function speedScore(){
+    if(score > 10 && score < 20){
+        game.enemyInterval = 100
+        console.log("score is bigger then 10")
+    }
+    else if(score > 20 && score < 30){
+        game.enemyInterval = 50
+        console.log("score is bigger then 20")
+    }
+    else if(score > 30 && score < 40){
+        game.enemyInterval = 20
+       
+    
+    }
+    else if(score > 40){
+        game.enemyInterval = 1
+    }
+}
 
 class Enemy {
     constructor(game) {
@@ -213,12 +260,12 @@ class Enemy {
         this.spriteHeight = 188,
         this.width = this.spriteWidth / 3,
         this.height = this.spriteHeight / 3,
-        this.y = Math.random() * (canvasHeight - this.height),
+        this.y = Math.random() * (canvasHeight - 200),
         this.x = canvasWidth;
         this.frame = 0;
         this.flapSpeed = Math.floor(Math.random() * 3 + 1);
         this.angle = 0
-        this.curve = Math.random() * 3
+        this.curve = Math.random() * 7
         
     }
     update(){
@@ -280,7 +327,7 @@ let kryiptoniteCon = []
 setInterval(() => {
     const kriptonite =  new Kryptonitecls 
     kryiptoniteCon.push(kriptonite)
-}, 4000)
+}, 3000)
 
 
 const red = new Image();
@@ -291,7 +338,7 @@ class Redkryptonitecls  {
         this.x = (Math.random() * (canvas.width - 200)) +25;
         this.y =  0;                 // todo: this
         this.height = 60,
-        this.speed = 1,
+        this.speed = 0.5,
         this.image = red;
     }
     draw() {
@@ -316,7 +363,7 @@ let redkryiptoniteCon = []
 setInterval(() => {
     const redkriptonite =  new Redkryptonitecls 
     redkryiptoniteCon.push(redkriptonite)
-}, 30000)
+}, 20000)
 
 
 
@@ -338,6 +385,7 @@ addEventListener('keydown', ({key}) => {
             reaLsuperman.moveLeft()
             break; 
             case' ':
+            laser.play()
             projectilesArray.push(new Projectiles({
                 position: {
                     x: reaLsuperman.position.x + 130,
@@ -360,6 +408,7 @@ let lastTime = 1;
 
    function gameState() {
     if (gameOver){
+        doyoubleed.play();
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
         loseScreen();
         youLost();
@@ -367,6 +416,9 @@ let lastTime = 1;
         projectilesArray = [];
         kryiptoniteCon= [];
         redkryiptoniteCon = [];
+        wind.stop();
+        firstbreak1.stop();
+       
     }
    }
 
@@ -382,6 +434,8 @@ if (!gameOver){
 
 function animate(timeStamp) {
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    speedScore()
+    wind.play();
     arrBackGround.forEach(item => {
         item.update()
         item.draw()
@@ -413,7 +467,12 @@ function animate(timeStamp) {
         }
         kryiptoniteCon.forEach((kryp, index) => {
             if(reaLsuperman.contains(kryp, index)){
-                reaLsuperman.speed -= 10       // if speed under 10?
+                greensound.play();
+                reaLsuperman.speed -= 10  
+                console.log("this is speed",reaLsuperman.speed) //)
+                if (reaLsuperman.speed < 10){
+                    reaLsuperman.speed = 10
+                }     // if speed under 10?
                 kryiptoniteCon.splice(index, 1)
             }
         })
@@ -422,6 +481,7 @@ function animate(timeStamp) {
         }
         redkryiptoniteCon.forEach((kryp, index) => {
             if(reaLsuperman.contains(kryp, index)){
+                firstbreak1.play();
                 reaLsuperman.speed += 10       // if speed under 10?
                 redkryiptoniteCon.splice(index, 1)
             }
