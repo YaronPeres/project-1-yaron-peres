@@ -19,8 +19,8 @@ red kryptonite will arrive. make sure to catch it on time.
 - Player will increase his SCORE by eliminating the flying enemies.
 ---
 ### More to come
-- [ ] Sound
-- [ ] Superman Sprite
+- [ ] Game sound
+- [ ] Superman sprite
 
 
 
