@@ -9,7 +9,7 @@ Green kryptonite? stay away! it will make you slower! but don't worry if you tou
 red kryptonite will arrive. make sure to catch it on time.
 ---
 
-### **controler**
+### **controller**
 
 - Player can start the game by pressing the start button with the mouse.
 - Player can move up, down, left and right(using WASD buttons).
